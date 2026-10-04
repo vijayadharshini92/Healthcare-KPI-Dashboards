@@ -1,0 +1,657 @@
+{
+  "datasets": [
+    {
+      "name": "8b0334d5",
+      "displayName": "Total Unique Patients Count Summary",
+      "queryLines": [
+        "SELECT\r\n",
+        "    COUNT(DISTINCT Id) AS total_patients\r\n",
+        "FROM workspace.default.patients;"
+      ]
+    },
+    {
+      "name": "a458cb1b",
+      "displayName": "Total Unique Ecounters",
+      "queryLines": [
+        "SELECT\r\n",
+        "    COUNT(DISTINCT Id) AS total_encounters\r\n",
+        "FROM workspace.default.encounters;"
+      ]
+    },
+    {
+      "name": "718e633e",
+      "displayName": "Patient Encounter Overview Dataset",
+      "queryLines": [
+        "SELECT\r\n",
+        "    Id,\r\n",
+        "    PATIENT,\r\n",
+        "    ENCOUNTERCLASS\r\n",
+        "FROM workspace.default.encounters\r\n",
+        "LIMIT 10;\r\n"
+      ]
+    },
+    {
+      "name": "3e8cbf0e",
+      "displayName": "Average Ecounter by each patient",
+      "queryLines": [
+        "SELECT\r\n",
+        "    ROUND(\r\n",
+        "        COUNT(DISTINCT Id) / COUNT(DISTINCT PATIENT),\r\n",
+        "        2\r\n",
+        "    ) AS encounters_per_patient\r\n",
+        "FROM encounters;"
+      ]
+    },
+    {
+      "name": "3459f120",
+      "displayName": "Encounter Class Distribution Summary Dataset",
+      "queryLines": [
+        "SELECT\r\n",
+        "    DISTINCT ENCOUNTERCLASS,\r\n",
+        "    COUNT(*) AS Count\r\n",
+        "FROM encounters\r\n",
+        "GROUP BY ENCOUNTERCLASS\r\n",
+        "ORDER BY Count DESC;\r\n"
+      ]
+    },
+    {
+      "name": "de72438f",
+      "displayName": "Encounter Trend Over Time",
+      "queryLines": [
+        "SELECT\r\n",
+        "    YEAR(START) AS encounter_year,\r\n",
+        "    COUNT(DISTINCT Id) AS encounter_count\r\n",
+        "FROM encounters\r\n",
+        "GROUP BY YEAR(START)\r\n",
+        "ORDER BY encounter_year;\r\n",
+        "\r\n"
+      ]
+    },
+    {
+      "name": "4b16e3a9",
+      "displayName": "Yearly Encounter Counts by Classification Summary",
+      "queryLines": [
+        "SELECT\r\n",
+        "    YEAR(START) AS encounter_year,\r\n",
+        "    ENCOUNTERCLASS AS encounter_class,\r\n",
+        "    COUNT(DISTINCT Id) AS encounter_count\r\n",
+        "FROM encounters\r\n",
+        "WHERE YEAR(START) BETWEEN 2020 AND 2026\r\n",
+        "GROUP BY\r\n",
+        "    YEAR(START),\r\n",
+        "    ENCOUNTERCLASS\r\n",
+        "ORDER BY\r\n",
+        "    encounter_year;"
+      ]
+    },
+    {
+      "name": "4f21b8c0",
+      "displayName": "Providers and their count encounters",
+      "queryLines": [
+        "SELECT\r\n",
+        "    PROVIDER,\r\n",
+        "    COUNT(DISTINCT Id) AS encounter_count\r\n",
+        "FROM encounters\r\n",
+        "GROUP BY PROVIDER\r\n",
+        "ORDER BY encounter_count DESC\r\n",
+        "LIMIT 5;"
+      ]
+    },
+    {
+      "name": "bf8605d5",
+      "displayName": "Encounter Counts Grouped by Organization",
+      "queryLines": [
+        "SELECT\r\n",
+        "    ORGANIZATION,\r\n",
+        "    COUNT(DISTINCT Id) AS encounter_count\r\n",
+        "FROM encounters\r\n",
+        "GROUP BY ORGANIZATION\r\n",
+        "ORDER BY encounter_count DESC\r\n",
+        "limit 10;"
+      ]
+    },
+    {
+      "name": "079de84a",
+      "displayName": "encounter types tend to last the longest",
+      "queryLines": [
+        "SELECT\r\n",
+        "    ENCOUNTERCLASS,\r\n",
+        "    ROUND(\r\n",
+        "        AVG(TIMESTAMPDIFF(MINUTE, START, STOP)),\r\n",
+        "        2\r\n",
+        "    ) AS avg_duration_minutes\r\n",
+        "FROM encounters\r\n",
+        "WHERE START IS NOT NULL\r\n",
+        "  AND STOP IS NOT NULL\r\n",
+        "GROUP BY ENCOUNTERCLASS\r\n",
+        "ORDER BY avg_duration_minutes DESC;"
+      ]
+    }
+  ],
+  "relationshipGraphs": [
+    {
+      "sources": [
+        {
+          "name": "Total_Unique_Patients_Count_Summary",
+          "datasetName": "8b0334d5"
+        },
+        {
+          "name": "Untitled_dataset",
+          "datasetName": "a458cb1b"
+        },
+        {
+          "name": "Untitled_dataset_1",
+          "datasetName": "718e633e"
+        },
+        {
+          "name": "Untitled_dataset_2",
+          "datasetName": "3e8cbf0e"
+        },
+        {
+          "name": "Untitled_dataset_3",
+          "datasetName": "3459f120"
+        },
+        {
+          "name": "Untitled_dataset_4",
+          "datasetName": "de72438f"
+        },
+        {
+          "name": "Untitled_dataset_5",
+          "datasetName": "4b16e3a9"
+        },
+        {
+          "name": "Untitled_dataset_6",
+          "datasetName": "4f21b8c0"
+        },
+        {
+          "name": "Untitled_dataset_7",
+          "datasetName": "bf8605d5"
+        },
+        {
+          "name": "Untitled_dataset_8",
+          "datasetName": "079de84a"
+        }
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "949899a5",
+      "displayName": "Healthcare KPI",
+      "layout": [
+        {
+          "widget": {
+            "name": "9ac38694",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "Total_Unique_Patients_Count_Summary__total_patients",
+                      "expression": "`Total_Unique_Patients_Count_Summary`.`total_patients`"
+                    }
+                  ],
+                  "disaggregated": true,
+                  "orders": [
+                    {
+                      "direction": "DESC",
+                      "expression": "`Total_Unique_Patients_Count_Summary`.`total_patients`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Total Patients",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "Total_Unique_Patients_Count_Summary__total_patients"
+                },
+                "period": {
+                  "fieldName": "Total_Unique_Patients_Count_Summary__total_patients",
+                  "hideLabels": true
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 1,
+            "y": 0,
+            "width": 3,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "total-encounters",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "Untitled_dataset__total_encounters",
+                      "expression": "`Untitled_dataset`.`total_encounters`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "# <span style=\"font-size:11px\">Total </span><span style=\"font-size:12px\">Encounters</span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "Untitled_dataset__total_encounters"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 0,
+            "width": 3,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "average-encounter-by-each-patient",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "avg(Untitled_dataset_2__encounters_per_patient)",
+                      "expression": "AVG(`Untitled_dataset_2`.`encounters_per_patient`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"text-align:center;display:block;\">Average Encounter By Each Patient</span>",
+                  "fields": []
+                }
+              },
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "avg(Untitled_dataset_2__encounters_per_patient)"
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 1,
+            "y": 2,
+            "width": 6,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "encounter-class-distribution",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "Untitled_dataset_3__ENCOUNTERCLASS",
+                      "expression": "`Untitled_dataset_3`.`ENCOUNTERCLASS`"
+                    },
+                    {
+                      "name": "sum(Untitled_dataset_3__Count)",
+                      "expression": "SUM(`Untitled_dataset_3`.`Count`)"
+                    }
+                  ],
+                  "filters": [
+                    {
+                      "expression": "`Untitled_dataset_3`.`ENCOUNTERCLASS` IN (`Untitled_dataset_3`.`ENCOUNTERCLASS`) OR TRUE"
+                    },
+                    {
+                      "expression": "`Untitled_dataset_3`.`ENCOUNTERCLASS` IN (`Untitled_dataset_3`.`ENCOUNTERCLASS`) OR TRUE"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "showDescription": false,
+                "title": {
+                  "value": "<span style=\"text-align:center;display:block;\">Encounter Class Distribution</span>",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "Untitled_dataset_3__ENCOUNTERCLASS",
+                  "scale": {
+                    "type": "categorical",
+                    "sort": {
+                      "by": "y"
+                    }
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(Untitled_dataset_3__Count)",
+                  "format": {
+                    "type": "number-plain",
+                    "abbreviation": "compact",
+                    "decimalPlaces": {
+                      "type": "max",
+                      "places": 2
+                    }
+                  },
+                  "scale": {
+                    "type": "quantitative",
+                    "reverse": false
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 1,
+            "y": 4,
+            "width": 6,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "5affb44f",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "Untitled_dataset_5__encounter_class",
+                      "expression": "`Untitled_dataset_5`.`encounter_class`"
+                    },
+                    {
+                      "name": "Untitled_dataset_5__encounter_year",
+                      "expression": "`Untitled_dataset_5`.`encounter_year`"
+                    },
+                    {
+                      "name": "sum(Untitled_dataset_5__encounter_count)",
+                      "expression": "SUM(`Untitled_dataset_5`.`encounter_count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Encounter Trend by Class Over Time",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "line",
+              "encodings": {
+                "x": {
+                  "fieldName": "Untitled_dataset_5__encounter_year",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "sum(Untitled_dataset_5__encounter_count)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "Untitled_dataset_5__encounter_class",
+                  "scale": {
+                    "type": "categorical",
+                    "mappings": [
+                      {
+                        "value": "ambulatory",
+                        "color": {
+                          "themeColorType": "visualizationColors",
+                          "position": 1
+                        }
+                      }
+                    ]
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 7,
+            "y": 0,
+            "width": 5,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "encounters-by-top-5-providers",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "sum(Untitled_dataset_6__encounter_count)",
+                      "expression": "SUM(`Untitled_dataset_6`.`encounter_count`)"
+                    },
+                    {
+                      "name": "Untitled_dataset_6__PROVIDER",
+                      "expression": "`Untitled_dataset_6`.`PROVIDER`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "Ecounters by Top 5 Providers",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "sum(Untitled_dataset_6__encounter_count)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "Untitled_dataset_6__PROVIDER",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 1,
+            "y": 9,
+            "width": 6,
+            "height": 5
+          }
+        },
+        {
+          "widget": {
+            "name": "top-organizations-by-encounter-volume",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "sum(Untitled_dataset_7__encounter_count)",
+                      "expression": "SUM(`Untitled_dataset_7`.`encounter_count`)"
+                    },
+                    {
+                      "name": "Untitled_dataset_7__ORGANIZATION",
+                      "expression": "`Untitled_dataset_7`.`ORGANIZATION`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showTitle": true,
+                "title": {
+                  "value": "<span style=\"text-align:center;display:block\">Top Organizations by Encounter Volume</span>",
+                  "fields": []
+                }
+              },
+              "version": 3,
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "sum(Untitled_dataset_7__encounter_count)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "color": {
+                  "fieldName": "Untitled_dataset_7__ORGANIZATION",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 1,
+            "y": 14,
+            "width": 11,
+            "height": 7
+          }
+        },
+        {
+          "widget": {
+            "name": "7365caca",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "fields": [
+                    {
+                      "name": "sum(Untitled_dataset_8__avg_duration_minutes)",
+                      "expression": "SUM(`Untitled_dataset_8`.`avg_duration_minutes`)"
+                    },
+                    {
+                      "name": "Untitled_dataset_8__ENCOUNTERCLASS",
+                      "expression": "`Untitled_dataset_8`.`ENCOUNTERCLASS`"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "frame": {
+                "showDescription": false,
+                "showTitle": true
+              },
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "sum(Untitled_dataset_8__avg_duration_minutes)",
+                  "scale": {
+                    "type": "quantitative"
+                  }
+                },
+                "y": {
+                  "fieldName": "Untitled_dataset_8__ENCOUNTERCLASS",
+                  "scale": {
+                    "type": "categorical"
+                  }
+                }
+              },
+              "data": {
+                "queryName": "main_query"
+              }
+            }
+          },
+          "position": {
+            "x": 7,
+            "y": 7,
+            "width": 5,
+            "height": 7
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS",
+      "layoutVersion": "GRID_V1"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    },
+    "applyModeEnabled": false
+  }
+}
